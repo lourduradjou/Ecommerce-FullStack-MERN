@@ -9,7 +9,6 @@ const connectDatabase = () => {
 				`Mongo DB is connected to the host ${con.connection.host}`
 			)
 		})
-		.catch((err) => console.log(err))
 }
 
 module.exports = connectDatabase

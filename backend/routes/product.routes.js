@@ -9,11 +9,17 @@ const {
 const router = express.Router()
 
 //routes to work with , example get and put request of the products
+
+//get all products details route
 router.route('/products').get(getProducts)
+//create a new product route
 router.route('/product/new').post(newProduct)
+//get a single product details route
 router.route('/product/:id').get(getSingleProduct).put(updateProduct) //two request for the same uri combined
-router.route('/product/:id').delete(deleteProduct)
 //router.route('/product/:id').put(updateProduct) - can be like this also
+
+//delete a product details route
+router.route('/product/:id').delete(deleteProduct)
 
 module.exports = router
 

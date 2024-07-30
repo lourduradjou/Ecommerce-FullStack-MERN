@@ -1,6 +1,6 @@
 const Product = require('../models/productModel')
-const ErrorHandler = require('../utils/errorHandlerClass')
-const catchAsyncError = require('../middlewares/catchAsyncError.Middleware')
+const ErrorHandler = require('../utils/errorHandlerClass') //ErrorHanlder class
+const catchAsyncError = require('../middlewares/catchAsyncError.Middleware') //created to handle asynchronous related errors
 
 //Fetching all Products details - /api/v1/products
 exports.getProducts = catchAsyncError(async (req, res, next) => {
@@ -40,15 +40,17 @@ exports.getSingleProduct = catchAsyncError(async (req, res, next) => {
 })
 
 //Update Product - /api/v1/product/:id
-exports.updateProduct = async (req, res, next) => {
+exports.updateProduct = catchAsyncError(async (req, res, next) => {
 	const product = await Product.findById(req.params.id)
 
 	if (!product) {
 		//if the product is empty
-		return res.status(404).json({
-			success: false,
-			message: `Data is not found in the database for the given id : ${req.params.id}`,
-		})
+		return next(
+			new ErrorHandler(
+				`Data is not found in the database for the given id : ${req.params.id}`,
+				400
+			)
+		)
 	}
 	const updatedProduct = await Product.findByIdAndUpdate(
 		req.params.id,
@@ -63,17 +65,20 @@ exports.updateProduct = async (req, res, next) => {
 		success: true,
 		updatedProduct,
 	})
-}
+})
 
 //Delete Product - used to delete a product via its id, api url - /api/v1/product/:id
-exports.deleteProduct = async (req, res, next) => {
+exports.deleteProduct = catchAsyncError(async (req, res, next) => {
 	const product = await Product.findById(req.params.id)
+
 	if (!product) {
 		//if the product is empty
-		return res.status(404).json({
-			success: false,
-			message: `Data is not found in the database for the given id : ${req.params.id}`,
-		})
+		return next(
+			new ErrorHandler(
+				`Data is not found in the database for the given id : ${req.params.id}`,
+				400
+			)
+		)
 	}
 
 	await Product.findByIdAndDelete(req.params.id)
@@ -82,7 +87,7 @@ exports.deleteProduct = async (req, res, next) => {
 		success: true,
 		message: 'Successful deleted the product',
 	})
-}
+})
 
 // 1xx: Informational
 // - 100 Continue: Request received, continue to send the rest of the request.
