@@ -1,10 +1,10 @@
 const express = require('express')
 const dotenv = require('dotenv')
 const path = require('path')
-const products = require('./routes/product.routes')
+const productRoutes = require('./routes/product.Routes')
 const connectDatabase = require('./config/connectDB')
 const errorMiddleware = require('./middlewares/error.Middleware')
-
+const authRoutes = require('./routes/auth.Routes')
 //getting the express object to work with its functions..
 const app = express()
 
@@ -17,8 +17,11 @@ dotenv.config({ path: path.join(__dirname, 'config/config.env') })
 //connecting mongo db database, function defined in ./config/database.js file
 connectDatabase()
 
-//first middleware to apply routing to api/v1
-app.use('/api/v1/', products)
+// middleware to apply routing to api/v1 for product related requests
+app.use('/api/v1/', productRoutes)
+
+// middleware to apply routing to api/v1 for user authenticatin related requests
+app.use('/api/v1/', authRoutes)
 
 //middleware to handle Validation and Cast Error seperately for development and seperately for the production(to the user)
 app.use(errorMiddleware)
