@@ -1,10 +1,14 @@
 const Product = require('../models/productModel')
 const ErrorHandler = require('../utils/errorHandlerClass') //ErrorHanlder class
 const catchAsyncError = require('../middlewares/catchAsyncError.Middleware') //created to handle asynchronous related errors
+const APIFeatures = require('../utils/apiFeatures')
 
 //Fetching all Products details - /api/v1/products
 exports.getProducts = catchAsyncError(async (req, res, next) => {
-	const products = await Product.find() //inbuilt find() function to get all datum from the dv
+	const apiFeatures = new APIFeatures(Product.find(), req.query).filter() //we send the data to the api features to use it functions
+
+	const products = await apiFeatures.query //get the apiFeatures query which was send back using await ..
+	
 	res.status(200).json({
 		success: true,
 		count: products.length,
