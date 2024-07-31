@@ -5,10 +5,15 @@ const APIFeatures = require('../utils/apiFeatures')
 
 //Fetching all Products details - /api/v1/products
 exports.getProducts = catchAsyncError(async (req, res, next) => {
-	const apiFeatures = new APIFeatures(Product.find(), req.query).filter() //we send the data to the api features to use it functions
+	const resultsPerPage = 2 //used to get the number of results we wanna show
+	//we send the data to the api features to use it functions
+	const apiFeatures = new APIFeatures(Product.find(), req.query)
+		.search()
+		.filter()
+		.paginate(resultsPerPage)
 
-	const products = await apiFeatures.query //get the apiFeatures query which was send back using await ..
-	
+	const products = await apiFeatures.productDetails //get the apiFeatures query which was send back using await ..
+
 	res.status(200).json({
 		success: true,
 		count: products.length,
