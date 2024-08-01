@@ -8,6 +8,7 @@ const {
 } = require('../controllers/productController')
 const {
 	isAuthenticatedUser,
+	authorizeRoles,
 } = require('../middlewares/authenticate.Middleware')
 const router = express.Router()
 
@@ -16,13 +17,15 @@ const router = express.Router()
 //get all products details route
 router.route('/products').get(isAuthenticatedUser, getProducts)
 //create a new product route
-router.route('/product/new').post(isAuthenticatedUser,newProduct)
+router
+	.route('/product/new')
+	.post(isAuthenticatedUser, authorizeRoles('admin'), newProduct)
 //get a single product details route
 router
 	.route('/product/:id')
-	.get(getSingleProduct)
-	.put(updateProduct)
-	.delete(deleteProduct) //three request for the same uri combined
+	.get(isAuthenticatedUser,getSingleProduct)
+	.put(isAuthenticatedUser,authorizeRoles('admin'), updateProduct)
+	.delete(isAuthenticatedUser,authorizeRoles('admin'), deleteProduct) //three request for the same uri combined
 //router.route('/product/:id').put(updateProduct) - can be like this also
 
 //delete a product details route

@@ -30,7 +30,7 @@ const sendToken_And_Response = require('../utils/JWTUtils')
 
 // Handler for registering a new user
 exports.registerUser = catchAsycnError(async (req, res, next) => {
-	const { email, name, password, avatar } = req.body
+	const { email, name, password, avatar, role } = req.body
 
 	// Create a new user in the database
 	const user = await UserModel.create({
@@ -38,6 +38,7 @@ exports.registerUser = catchAsycnError(async (req, res, next) => {
 		email,
 		password,
 		avatar,
+		role,
 	})
 
 	// Generate a JWT token for the newly registered user
@@ -63,10 +64,22 @@ exports.loginUser = catchAsyncErrorMiddleware(async (req, res, next) => {
 	if (!user) return next(new ErrorHandler('Invalid Email or Password', 401))
 
 	// Check if the provided password is valid
-	// ! await is needed here so that the function would wait until it gets a response 
+	// * await is needed here so that the function would wait until it gets a response
 	if (!(await user.isValidPassword(password)))
 		return next(new ErrorHandler('Invalid Email or Password', 401))
 
 	// Generate and send a JWT token and response to the client
 	sendToken_And_Response(user, 201, res)
 })
+
+exports.logoutUser = (req, res, next) => {
+	res.cookie('token', null, {
+		expires: new Date(Date.now()),
+		httpOnly: true,
+	})
+		.status(200)
+		.json({
+			sucesss: true,
+			message: 'Logged Out',
+		})
+}
