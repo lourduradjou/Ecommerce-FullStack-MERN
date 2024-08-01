@@ -5,11 +5,14 @@ const productRoutes = require('./routes/product.Routes')
 const connectDatabase = require('./config/connectDB')
 const errorMiddleware = require('./middlewares/error.Middleware')
 const authRoutes = require('./routes/auth.Routes')
+const cookieParser = require('cookie-parser')
 //getting the express object to work with its functions..
 const app = express()
 
 //basic importing stuffs and using express.json() to work with json formated files
 app.use(express.json())
+//using the cookie parser package to work with cookies
+app.use(cookieParser())
 
 //configuring environment variables here and giving the path using path module
 dotenv.config({ path: path.join(__dirname, 'config/config.env') })
