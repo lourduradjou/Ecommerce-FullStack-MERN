@@ -1,0 +1,10 @@
+const sendToken_And_Response = (user, statusCode, res) => {
+	const token = user.getJwtToken()
+	res.status(statusCode).json({
+		success: true,
+		token,
+		user,
+	})
+}
+
+module.exports = sendToken_And_Response
