@@ -1,9 +1,32 @@
 // Import middleware and utility functions
 const catchAsyncErrorMiddleware = require('../middlewares/catchAsyncError.Middleware')
 const catchAsycnError = require('../middlewares/catchAsyncError.Middleware')
-const UserModel = require('../models/user.model') 
+const UserModel = require('../models/user.model')
 const ErrorHandler = require('../utils/errorHandlerClass')
 const sendToken_And_Response = require('../utils/JWTUtils')
+
+/*
+	Note: This is my personal note to work with better comments hope you like it..
+	*: Emphasizes important notes or critical information.
+	!: Indicates warnings or points of concern.
+	TODO: Marks incomplete tasks or future improvements.
+	?: Raises questions or highlights uncertainties.
+
+	* Information:
+		- This file contains handlers for user registration and login functionality.
+		- Uses middleware to handle async errors and token management.
+
+	! Note:
+		- Ensure that `catchAsycnError` is correctly imported if there's a typo. It should match the correct function name.
+		- Ensure `JWTUtils` matches the actual file name for consistency.
+	
+	TODO:
+		- Consider adding validation for input fields to improve security and robustness.
+		- Implement rate limiting to protect endpoints from abuse.
+	
+	? Question:
+		- Do we need to handle additional cases for user roles or permissions in the future?
+*/
 
 // Handler for registering a new user
 exports.registerUser = catchAsycnError(async (req, res, next) => {
@@ -40,6 +63,7 @@ exports.loginUser = catchAsyncErrorMiddleware(async (req, res, next) => {
 	if (!user) return next(new ErrorHandler('Invalid Email or Password', 401))
 
 	// Check if the provided password is valid
+	// ! await is needed here so that the function would wait until it gets a response 
 	if (!(await user.isValidPassword(password)))
 		return next(new ErrorHandler('Invalid Email or Password', 401))
 
