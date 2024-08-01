@@ -20,7 +20,7 @@ exports.isAuthenticatedUser = catchAsyncErrorMiddleware(
 		const decoded = jwt.verify(token, process.env.JWT_SECRET) // Use the secret key to decode the token
 
 		// Fetch the user document from the database using the user ID obtained from the token
-		req.user = await userModel.findById(decoded.id)
+		req.user = await userModel.findById(decoded.id)	
 
 		// If no user is found, handle this situation
 		if (!req.user) {

@@ -2,6 +2,10 @@ const mongoose = require('mongoose')
 
 // Define the schema for the Product model
 const productSchema = new mongoose.Schema({
+	//Product created by which user , ID of the user
+	user: {
+		type: mongoose.Schema.Types.ObjectId
+	},
 	// Name of the product
 	name: {
 		type: String,
