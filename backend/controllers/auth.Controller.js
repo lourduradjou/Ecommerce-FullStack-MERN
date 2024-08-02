@@ -2,6 +2,7 @@
 const catchAsyncErrorMiddleware = require('../middlewares/catchAsyncError.Middleware')
 const catchAsycnError = require('../middlewares/catchAsyncError.Middleware')
 const UserModel = require('../models/user.model')
+const sendEmail = require('../utils/email')
 const ErrorHandler = require('../utils/errorHandlerClass')
 const sendToken_And_Response = require('../utils/JWTUtils')
 
@@ -83,3 +84,41 @@ exports.logoutUser = (req, res, next) => {
 			message: 'Logged Out',
 		})
 }
+
+exports.forgotPassword = catchAsycnError(async (req, res, next) => {
+	const user = await UserModel.findOne({ email: req.body.email }) //get the user data
+	// console.log(user)
+	if (!user)
+		return next(new ErrorHandler('User not found with this email', 404))
+
+	//generate a reset token
+	const resetToken = user.getResetToken()
+	await user.save({ validateBeforeSave: false })
+
+	//create reset url
+	const resetUrl = `${req.protocol}://${req.get(
+		'host'
+	)}/api/v1/password/reset/${resetToken}`
+
+	const message = `Your password reset url is as follows \n\n
+					 ${resetUrl} \n\n 
+					 If you have not requested this email, then ignore it`
+
+	try {
+		sendEmail({
+			email: user.email,
+			subject: 'EcommerceIndia Password Recovery',
+			message: message,
+		})
+
+		res.status(200).json({
+			success: true,
+			message: `Email was sended to ${user.email}`,
+		})
+	} catch (err) {
+		user.resetPasswordToken = undefined
+		user.resetPasswordTokenExpire = undefined
+		await user.save({ validateBeforeSave: false })
+		return next(new ErrorHandler(err.message, 500))
+	}
+})

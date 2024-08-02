@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const validator = require('email-validator')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
 
 // Define the schema for the User model
 const userSchema = mongoose.Schema({
@@ -59,8 +60,10 @@ userSchema.pre('save', async function (next) {
 	// Check if the password field is modified (e.g., during registration or password update)
 	if (!this.isModified('password')) return next()
 
-	// Hash the password using bcrypt with a salt rounds of 10
-	this.password = await bcrypt.hash(this.password, 10)
+	if (this.isModified('password')) {
+		// Hash the password using bcrypt with a salt rounds of 10
+		this.password = await bcrypt.hash(this.password, 10)
+	}
 
 	// Proceed to the next middleware or save operation
 	next()
@@ -81,6 +84,22 @@ userSchema.methods.getJwtToken = function () {
 userSchema.methods.isValidPassword = async function (enteredPassword) {
 	// Use bcrypt to compare the entered password with the hashed password
 	return await bcrypt.compare(enteredPassword, this.password)
+}
+
+userSchema.methods.getResetToken = async function () {
+	//generate token
+	const token = crypto.randomBytes(20).toString('hex') //generates a random buffer data we can convert it to string
+
+	//generated hash and set to resetPasswordToken in the user model
+	this.resetPasswordToken = await crypto
+		.createHash('sha256')
+		.update(token)
+		.digest('hex')
+
+	//Set token expire time
+	this.resetPasswordTokenExpire = Date.now() + 30 * 60 * 1000
+
+	return token
 }
 
 // Create a Mongoose model based on the user schema
