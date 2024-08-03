@@ -1,5 +1,5 @@
 // Import middleware and utility functions
-const catchAsyncErrorMiddleware = require('../middlewares/catchAsyncError.Middleware')
+const catchAsyncError = require('../middlewares/catchAsyncError.Middleware')
 const catchAsycnError = require('../middlewares/catchAsyncError.Middleware')
 const UserModel = require('../models/user.model')
 const sendEmail = require('../utils/email')
@@ -50,7 +50,7 @@ exports.registerUser = catchAsycnError(async (req, res, next) => {
 })
 
 // Handler for logging in a user
-exports.loginUser = catchAsyncErrorMiddleware(async (req, res, next) => {
+exports.loginUser = catchAsyncError(async (req, res, next) => {
 	const { email, password } = req.body
 
 	// Check if both email and password are provided
@@ -74,51 +74,62 @@ exports.loginUser = catchAsyncErrorMiddleware(async (req, res, next) => {
 })
 
 exports.logoutUser = (req, res, next) => {
+	// Clear the 'token' cookie by setting it to null and setting an expiry date in the past
+	// This effectively logs out the user by invalidating their session token
 	res.cookie('token', null, {
-		expires: new Date(Date.now()),
-		httpOnly: true,
+		expires: new Date(Date.now()), // Expiry date set to now to delete the cookie
+		httpOnly: true, // Ensures the cookie is only accessible by the server
 	})
-		.status(200)
+		.status(200) // Send a 200 OK response status
 		.json({
-			sucesss: true,
-			message: 'Logged Out',
+			success: true, // Indicates the logout was successful
+			message: 'Logged Out', // Message to be sent in the response
 		})
 }
 
-exports.forgotPassword = catchAsycnError(async (req, res, next) => {
-	const user = await UserModel.findOne({ email: req.body.email }) //get the user data
-	// console.log(user)
-	if (!user)
-		return next(new ErrorHandler('User not found with this email', 404))
+exports.forgotPassword = catchAsyncError(async (req, res, next) => {
+	// Find the user in the database using the provided email
+	const user = await UserModel.findOne({ email: req.body.email })
 
-	//generate a reset token
-	const resetToken = user.getResetToken()
+	// If no user is found with the provided email, return a 404 error
+	if (!user) {
+		return next(new ErrorHandler('User not found with this email', 404))
+	}
+
+	// Generate a reset token for the user
+	// This token will be used to reset the user's password
+	const resetToken = await user.getResetToken()
+	// Save the user document with the reset token and its expiration time
 	await user.save({ validateBeforeSave: false })
 
-	//create reset url
+	// Create the URL for resetting the password using the generated token
 	const resetUrl = `${req.protocol}://${req.get(
 		'host'
 	)}/api/v1/password/reset/${resetToken}`
 
-	const message = `Your password reset url is as follows \n\n
-					 ${resetUrl} \n\n 
-					 If you have not requested this email, then ignore it`
+	// Create the message to be sent to the user
+	const message = `Your password reset URL is as follows:\n\n${resetUrl}\n\nIf you have not requested this email, then ignore it.`
 
 	try {
-		sendEmail({
+		// Send the password reset email to the user
+		await sendEmail({
 			email: user.email,
 			subject: 'EcommerceIndia Password Recovery',
 			message: message,
 		})
 
+		// Send a success response with the email address
 		res.status(200).json({
 			success: true,
-			message: `Email was sended to ${user.email}`,
+			message: `Email was sent to ${user.email}`, // Note: 'sended' should be corrected to 'sent'
 		})
 	} catch (err) {
+		// If sending the email fails, clear the reset token and its expiration time
 		user.resetPasswordToken = undefined
 		user.resetPasswordTokenExpire = undefined
 		await user.save({ validateBeforeSave: false })
+
+		// Pass the error to the error handling middleware
 		return next(new ErrorHandler(err.message, 500))
 	}
 })

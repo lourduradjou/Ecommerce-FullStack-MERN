@@ -87,18 +87,22 @@ userSchema.methods.isValidPassword = async function (enteredPassword) {
 }
 
 userSchema.methods.getResetToken = async function () {
-	//generate token
-	const token = crypto.randomBytes(20).toString('hex') //generates a random buffer data we can convert it to string
+	// Generate a random token using crypto.randomBytes
+	// The token will be used to reset the user's password
+	const token = await crypto.randomBytes(20).toString('hex')
 
-	//generated hash and set to resetPasswordToken in the user model
-	this.resetPasswordToken = await crypto
+	// Create a hash of the token using SHA-256 to securely store it in the database
+	// This helps to protect the token from being exposed
+	this.resetPasswordToken = crypto
 		.createHash('sha256')
 		.update(token)
 		.digest('hex')
 
-	//Set token expire time
-	this.resetPasswordTokenExpire = Date.now() + 30 * 60 * 1000
+	// Set an expiration time for the token (30 minutes from now)
+	// This ensures the reset token is valid only for a limited period
+	this.resetPasswordTokenExpire = Date.now() + (30 * 60 * 1000)
 
+	// Return the plain token that will be sent to the user via email
 	return token
 }
 
