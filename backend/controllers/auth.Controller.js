@@ -5,6 +5,7 @@ const UserModel = require('../models/user.model')
 const sendEmail = require('../utils/email')
 const ErrorHandler = require('../utils/errorHandlerClass')
 const sendToken_And_Response = require('../utils/JWTUtils')
+const crypto = require('crypto')
 
 /*
 	Note: This is my personal note to work with better comments hope you like it..
@@ -87,6 +88,7 @@ exports.logoutUser = (req, res, next) => {
 		})
 }
 
+//functino to handle forgot password request from the client
 exports.forgotPassword = catchAsyncError(async (req, res, next) => {
 	// Find the user in the database using the provided email
 	const user = await UserModel.findOne({ email: req.body.email })
@@ -133,3 +135,59 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
 		return next(new ErrorHandler(err.message, 500))
 	}
 })
+
+//function to handle the resetPassword request from the client
+exports.resetPassword = catchAsycnError(async (req, res, next) => {
+    // Get the token sent from the client side via the URL parameter
+    const requestedToken = req.params.token;
+
+    // Hash the requested token using SHA-256 algorithm
+    // This is done to match the hashed token stored in the database
+    const hashedToken = crypto
+        .createHash('sha256')
+        .update(requestedToken)
+        .digest('hex');
+
+    // Log the hashed token for debugging purposes
+    console.log('hashedToken', hashedToken);
+    console.log('\n\n');
+
+    // Find the user in the database based on the hashed token and its expiration time
+    // The token must be valid and not expired
+    const user = await UserModel.findOne({
+        resetPasswordToken: hashedToken,
+        resetPasswordTokenExpire: {
+            $gt: Date.now(), // Check if the token expiration time is greater than the current time
+        },
+    });
+
+    // Log the found user for debugging purposes
+    console.log('user', user);
+
+    // If no user is found with the provided token, either the token is invalid or expired
+    if (!user) {
+        // Pass the error to the error handling middleware
+        return next(
+            new ErrorHandler('Password reset token is invalid or expired')
+        );
+    }
+
+    // Check if the provided password matches the confirm password
+    if (req.body.password !== req.body.confirmPassword) {
+        // If the passwords don't match, pass the error to the error handling middleware
+        return next(new ErrorHandler('Password does not match'));
+    }
+
+    // If all conditions are met, update the user's password
+    user.password = req.body.password;
+    // Clear the reset password token and its expiration time
+    user.resetPasswordToken = undefined;
+    user.resetPasswordTokenExpire = undefined;
+
+    // Save the updated user document to the database
+    // The `validateBeforeSave` option is set to `false` to skip validation
+    await user.save({ validateBeforeSave: false });
+
+    // Generate a new JWT token for the user and send it in the response
+    sendToken_And_Response(user, 201, res);
+});
