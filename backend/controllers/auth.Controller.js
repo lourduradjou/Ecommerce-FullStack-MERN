@@ -1,13 +1,12 @@
 // Import middleware and utility functions
 const catchAsyncError = require('../middlewares/catchAsyncError.Middleware')
-const catchAsycnError = require('../middlewares/catchAsyncError.Middleware')
 const UserModel = require('../models/user.model')
 const sendEmail = require('../utils/email')
 const ErrorHandler = require('../utils/errorHandlerClass')
 const sendToken_And_Response = require('../utils/JWTUtils')
 const crypto = require('crypto')
 
-/*
+/*  Just Ignore this 😉
 	Note: This is my personal note to work with better comments hope you like it..
 	*: Emphasizes important notes or critical information.
 	!: Indicates warnings or points of concern.
@@ -29,6 +28,9 @@ const crypto = require('crypto')
 	? Question:
 		- Do we need to handle additional cases for user roles or permissions in the future?
 */
+
+// ? Can we seperate the controllers further to improve the readability and workflow i feel we can extend
+
 
 // Handler for registering a new user
 // Endpoint: POST api/v1/register
@@ -219,3 +221,21 @@ exports.changePassword = catchAsyncError(async (req, res, next) => {
     });
 });
 
+//updating the user profile
+//
+exports.updateProfile = catchAsyncError(async (req, res, next) => {
+	const newUserData = {
+		name: req.body.name,
+		email: req.body.email
+	}
+
+	const updatedUser = UserModel.findByIdAndUpdate(req.user.id, newUserData, {
+		new: true,
+		runValidators: true,
+	})
+
+	res.status(200).json({
+		success: true,
+		updatedUser
+	})
+})

@@ -36,5 +36,7 @@ router.route('/myprofile').get(isAuthenticatedUser, getUserProfile)
 // POST request to change the password
 router.route('/password/change').put(isAuthenticatedUser, changePassword)
 
+router.route('/update').put(isAuthenticatedUser, getUserProfile)
+
 // Exporting the router for use in other parts of the application
 module.exports = router

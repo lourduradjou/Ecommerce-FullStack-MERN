@@ -29,41 +29,41 @@ module.exports = (errObj, req, res, next) => {
 		// Handle duplicate key errors (e.g., unique constraint violations)
 		if (errObj.code === 11000) {
 			message = `Duplicate ${Object.keys(errObj.keyValue)} error` // Set a message indicating a duplicate error
-			error = new ErrorHandler(message) // Create a new error instance with the message
+			error = new ErrorHandler(message, 400) // Create a new error instance with the message
 		}
 
 		// Handle JSON Web Token errors
 		if (errObj.name === 'JSONWebTokenError') {
 			message = `Json Web Token is invalid. Try again` // Set a message for invalid JWT
-			error = new ErrorHandler(message) // Create a new error instance with the message
+			error = new ErrorHandler(message, 400) // Create a new error instance with the message
 		}
 
 		// Handle expired JSON Web Tokens
 		if (errObj.name === 'TokenExpiredError') {
 			message = `Json Web Token is Expired` // Set a message for expired JWT
-			error = new ErrorHandler(message) // Create a new error instance with the message
+			error = new ErrorHandler(message, 400) // Create a new error instance with the message
 		}
 
 		// Handle authentication errors
-        if (errObj.name === 'AuthenticationError') {
-            message = 'Invalid credentials provided';
-            error = new ErrorHandler(message, 401);
-        }
+		if (errObj.name === 'AuthenticationError') {
+			message = 'Invalid credentials provided'
+			error = new ErrorHandler(message, 401)
+		}
 
-        // Handle authorization errors
-        if (errObj.name === 'AuthorizationError') {
-            message = 'You do not have permission to access this resource';
-            error = new ErrorHandler(message, 403);
-        }
+		// Handle authorization errors
+		if (errObj.name === 'AuthorizationError') {
+			message = 'You do not have permission to access this resource'
+			error = new ErrorHandler(message, 403)
+		}
 
-        // Handle input validation errors
-        if (errObj.name === 'InputValidationError') {
-            message = 'Invalid input provided';
-            error = new ErrorHandler(message, 400);
-        }
+		// Handle input validation errors
+		if (errObj.name === 'InputValidationError') {
+			message = 'Invalid input provided'
+			error = new ErrorHandler(message, 400)
+		}
 
 		// Send the error response to the client
-		res.status(errObj.statusCode).json({
+		res.status(error.statusCode).json({
 			success: false, // Indicate that the request was not successful
 			message: error.message || 'Internal Server Error', // Send the error message or a default message
 		})
