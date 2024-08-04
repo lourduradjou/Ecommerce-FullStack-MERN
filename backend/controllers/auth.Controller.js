@@ -31,6 +31,7 @@ const crypto = require('crypto')
 */
 
 // Handler for registering a new user
+// Register user -> api/v1/register
 exports.registerUser = catchAsycnError(async (req, res, next) => {
 	const { email, name, password, avatar, role } = req.body
 
@@ -51,6 +52,7 @@ exports.registerUser = catchAsycnError(async (req, res, next) => {
 })
 
 // Handler for logging in a user
+// Login user -> api/v1/login
 exports.loginUser = catchAsyncError(async (req, res, next) => {
 	const { email, password } = req.body
 
@@ -74,6 +76,8 @@ exports.loginUser = catchAsyncError(async (req, res, next) => {
 	sendToken_And_Response(user, 201, res)
 })
 
+
+//Logout user -> api/v1/logout
 exports.logoutUser = (req, res, next) => {
 	// Clear the 'token' cookie by setting it to null and setting an expiry date in the past
 	// This effectively logs out the user by invalidating their session token
@@ -89,6 +93,7 @@ exports.logoutUser = (req, res, next) => {
 }
 
 //functino to handle forgot password request from the client
+//Forgot password -> api/v1/password/forgot
 exports.forgotPassword = catchAsyncError(async (req, res, next) => {
 	// Find the user in the database using the provided email
 	const user = await UserModel.findOne({ email: req.body.email })
@@ -137,6 +142,7 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
 })
 
 //function to handle the resetPassword request from the client
+//Reset Password -> api/v1/password/reset/:token
 exports.resetPassword = catchAsycnError(async (req, res, next) => {
     // Get the token sent from the client side via the URL parameter
     const requestedToken = req.params.token;
@@ -191,3 +197,12 @@ exports.resetPassword = catchAsycnError(async (req, res, next) => {
     // Generate a new JWT token for the user and send it in the response
     sendToken_And_Response(user, 201, res);
 });
+
+exports.getUserProfiel = catchAsycnError(async (req, res, next) => {
+	const user = await UserModel.findById(req.user.id) //retrieving the user details 
+	res.status(200).json({
+		success: true,
+		user
+	})
+})
+
