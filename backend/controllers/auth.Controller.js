@@ -31,178 +31,191 @@ const crypto = require('crypto')
 */
 
 // Handler for registering a new user
-// Register user -> api/v1/register
-exports.registerUser = catchAsycnError(async (req, res, next) => {
-	const { email, name, password, avatar, role } = req.body
+// Endpoint: POST api/v1/register
+exports.registerUser = catchAsyncError(async (req, res, next) => {
+    // Destructure necessary fields from the request body
+    const { email, name, password, avatar, role } = req.body;
 
-	// Create a new user in the database
-	const user = await UserModel.create({
-		name,
-		email,
-		password,
-		avatar,
-		role,
-	})
+    // Create a new user in the database with the provided details
+    const user = await UserModel.create({
+        name,
+        email,
+        password,
+        avatar,
+        role,
+    });
 
-	// Generate a JWT token for the newly registered user
-	const token = user.getJwtToken()
+    // Generate a JWT token for the newly registered user
+    const token = user.getJwtToken();
 
-	// Send the token and response to the client
-	sendToken_And_Response(user, 201, res)
-})
+    // Send the token and user details in the response to the client
+    sendToken_And_Response(user, 201, res);
+});
 
 // Handler for logging in a user
-// Login user -> api/v1/login
+// Endpoint: POST api/v1/login
 exports.loginUser = catchAsyncError(async (req, res, next) => {
-	const { email, password } = req.body
+    // Destructure email and password from the request body
+    const { email, password } = req.body;
 
-	// Check if both email and password are provided
-	if (!email || !password) {
-		return next(new ErrorHandler('Email or Password is missing', 400))
-	}
+    // Ensure both email and password are provided
+    if (!email || !password) {
+        return next(new ErrorHandler('Email or Password is missing', 400));
+    }
 
-	// Find the user by email and include the password field
-	const user = await UserModel.findOne({ email }).select('+password')
+    // Find the user by email and include the password field for verification
+    const user = await UserModel.findOne({ email }).select('+password');
 
-	// Check if the user exists
-	if (!user) return next(new ErrorHandler('Invalid Email or Password', 401))
+    // If user does not exist, return an error
+    if (!user) return next(new ErrorHandler('Invalid Email or Password', 401));
 
-	// Check if the provided password is valid
-	// * await is needed here so that the function would wait until it gets a response
-	if (!(await user.isValidPassword(password)))
-		return next(new ErrorHandler('Invalid Email or Password', 401))
+    // Validate the provided password against the stored hashed password
+    if (!(await user.isValidPassword(password))) {
+        return next(new ErrorHandler('Invalid Email or Password', 401));
+    }
 
-	// Generate and send a JWT token and response to the client
-	sendToken_And_Response(user, 201, res)
-})
+    // Generate and send a JWT token and response to the client
+    sendToken_And_Response(user, 200, res);
+});
 
-
-//Logout user -> api/v1/logout
+// Handler for logging out a user
+// Endpoint: POST api/v1/logout
 exports.logoutUser = (req, res, next) => {
-	// Clear the 'token' cookie by setting it to null and setting an expiry date in the past
-	// This effectively logs out the user by invalidating their session token
-	res.cookie('token', null, {
-		expires: new Date(Date.now()), // Expiry date set to now to delete the cookie
-		httpOnly: true, // Ensures the cookie is only accessible by the server
-	})
-		.status(200) // Send a 200 OK response status
-		.json({
-			success: true, // Indicates the logout was successful
-			message: 'Logged Out', // Message to be sent in the response
-		})
-}
+    // Clear the 'token' cookie to log out the user by invalidating their session
+    res.cookie('token', null, {
+        expires: new Date(Date.now()), // Set expiry to now to delete the cookie
+        httpOnly: true, // Ensure the cookie is only accessible by the server
+    })
+    .status(200) // Send a 200 OK response status
+    .json({
+        success: true, // Indicate that logout was successful
+        message: 'Logged Out', // Message to be sent in the response
+    });
+};
 
-//functino to handle forgot password request from the client
-//Forgot password -> api/v1/password/forgot
+// Function to handle forgot password request from the client
+// Endpoint: POST api/v1/password/forgot
 exports.forgotPassword = catchAsyncError(async (req, res, next) => {
-	// Find the user in the database using the provided email
-	const user = await UserModel.findOne({ email: req.body.email })
+    // Find the user in the database using the provided email
+    const user = await UserModel.findOne({ email: req.body.email });
 
-	// If no user is found with the provided email, return a 404 error
-	if (!user) {
-		return next(new ErrorHandler('User not found with this email', 404))
-	}
+    // If no user is found, return a 404 error
+    if (!user) {
+        return next(new ErrorHandler('User not found with this email', 404));
+    }
 
-	// Generate a reset token for the user
-	// This token will be used to reset the user's password
-	const resetToken = await user.getResetToken()
-	// Save the user document with the reset token and its expiration time
-	await user.save({ validateBeforeSave: false })
+    // Generate a reset token for the user to reset their password
+    const resetToken = await user.getResetToken();
+    // Save the user document with the reset token and its expiration time
+    await user.save({ validateBeforeSave: false });
 
-	// Create the URL for resetting the password using the generated token
-	const resetUrl = `${req.protocol}://${req.get(
-		'host'
-	)}/api/v1/password/reset/${resetToken}`
+    // Create the URL for resetting the password using the generated token
+    const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/password/reset/${resetToken}`;
 
-	// Create the message to be sent to the user
-	const message = `Your password reset URL is as follows:\n\n${resetUrl}\n\nIf you have not requested this email, then ignore it.`
+    // Create the message to be sent to the user
+    const message = `Your password reset URL is as follows:\n\n${resetUrl}\n\nIf you have not requested this email, then ignore it.`;
 
-	try {
-		// Send the password reset email to the user
-		await sendEmail({
-			email: user.email,
-			subject: 'EcommerceIndia Password Recovery',
-			message: message,
-		})
+    try {
+        // Send the password reset email to the user
+        await sendEmail({
+            email: user.email,
+            subject: 'EcommerceIndia Password Recovery',
+            message: message,
+        });
 
-		// Send a success response with the email address
-		res.status(200).json({
-			success: true,
-			message: `Email was sent to ${user.email}`, // Note: 'sended' should be corrected to 'sent'
-		})
-	} catch (err) {
-		// If sending the email fails, clear the reset token and its expiration time
-		user.resetPasswordToken = undefined
-		user.resetPasswordTokenExpire = undefined
-		await user.save({ validateBeforeSave: false })
+        // Send a success response indicating the email was sent
+        res.status(200).json({
+            success: true,
+            message: `Email was sent to ${user.email}`,
+        });
+    } catch (err) {
+        // If sending the email fails, clear the reset token and its expiration time
+        user.resetPasswordToken = undefined;
+        user.resetPasswordTokenExpire = undefined;
+        await user.save({ validateBeforeSave: false });
 
-		// Pass the error to the error handling middleware
-		return next(new ErrorHandler(err.message, 500))
-	}
-})
+        // Pass the error to the error handling middleware
+        return next(new ErrorHandler(err.message, 500));
+    }
+});
 
-//function to handle the resetPassword request from the client
-//Reset Password -> api/v1/password/reset/:token
-exports.resetPassword = catchAsycnError(async (req, res, next) => {
-    // Get the token sent from the client side via the URL parameter
+// Function to handle the reset password request from the client
+// Endpoint: POST api/v1/password/reset/:token
+exports.resetPassword = catchAsyncError(async (req, res, next) => {
+    // Get the token sent from the client via the URL parameter
     const requestedToken = req.params.token;
 
-    // Hash the requested token using SHA-256 algorithm
-    // This is done to match the hashed token stored in the database
-    const hashedToken = crypto
-        .createHash('sha256')
-        .update(requestedToken)
-        .digest('hex');
+    // Hash the requested token to match the hashed token stored in the database
+    const hashedToken = crypto.createHash('sha256').update(requestedToken).digest('hex');
 
-    // Log the hashed token for debugging purposes
-    console.log('hashedToken', hashedToken);
-    console.log('\n\n');
-
-    // Find the user in the database based on the hashed token and its expiration time
-    // The token must be valid and not expired
+    // Find the user based on the hashed token and its expiration time
     const user = await UserModel.findOne({
         resetPasswordToken: hashedToken,
         resetPasswordTokenExpire: {
-            $gt: Date.now(), // Check if the token expiration time is greater than the current time
+            $gt: Date.now(), // Check if the token is not expired
         },
     });
 
-    // Log the found user for debugging purposes
-    console.log('user', user);
-
-    // If no user is found with the provided token, either the token is invalid or expired
+    // If no user is found, the token is invalid or expired
     if (!user) {
-        // Pass the error to the error handling middleware
-        return next(
-            new ErrorHandler('Password reset token is invalid or expired')
-        );
+        return next(new ErrorHandler('Password reset token is invalid or expired'));
     }
 
     // Check if the provided password matches the confirm password
     if (req.body.password !== req.body.confirmPassword) {
-        // If the passwords don't match, pass the error to the error handling middleware
         return next(new ErrorHandler('Password does not match'));
     }
 
-    // If all conditions are met, update the user's password
+    // Update the user's password and clear the reset token and expiration time
     user.password = req.body.password;
-    // Clear the reset password token and its expiration time
     user.resetPasswordToken = undefined;
     user.resetPasswordTokenExpire = undefined;
 
     // Save the updated user document to the database
-    // The `validateBeforeSave` option is set to `false` to skip validation
     await user.save({ validateBeforeSave: false });
 
     // Generate a new JWT token for the user and send it in the response
-    sendToken_And_Response(user, 201, res);
+    sendToken_And_Response(user, 200, res);
 });
 
-exports.getUserProfiel = catchAsycnError(async (req, res, next) => {
-	const user = await UserModel.findById(req.user.id) //retrieving the user details 
-	res.status(200).json({
-		success: true,
-		user
-	})
-})
+// Gets the user profile details excluding the password from the database
+// Endpoint: GET api/v1/myprofile
+exports.getUserProfile = catchAsyncError(async (req, res, next) => {
+    // Retrieve the user details from the database using the user ID from the request
+    const user = await UserModel.findById(req.user.id); // req.user.id is assumed to be set by authentication middleware
+
+    // Respond with the user details, excluding the password
+    res.status(200).json({
+        success: true,
+        user, // The user object contains the profile details
+    });
+});
+
+// Change password of the user
+// Endpoint: POST api/v1/password/change
+exports.changePassword = catchAsyncError(async (req, res, next) => {
+    // Retrieve the user details from the database, including the hashed password for comparison
+    const user = await UserModel.findById(req.user.id).select('+password'); // '+password' ensures the password field is included
+
+    // Get the old password from the request body
+    const oldPassword = req.body.oldPassword;
+
+    // Check if the provided old password is valid
+    if (!(await user.isValidPassword(oldPassword))) {
+        // If the old password is incorrect, return an error response
+        return next(new ErrorHandler('Old password is incorrect', 401));
+    }
+
+    // Update the user's password with the new password from the request body
+    user.password = req.body.newPassword;
+
+    // Save the updated user details back to the database
+    await user.save();
+
+    // Respond with a success message indicating the password change was successful
+    res.status(200).json({
+        success: true,
+        message: 'Password successfully changed',
+    });
+});
 

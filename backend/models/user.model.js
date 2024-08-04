@@ -83,7 +83,7 @@ userSchema.methods.getJwtToken = function () {
 // Method to compare an entered password with the stored hashed password
 userSchema.methods.isValidPassword = async function (enteredPassword) {
 	// Use bcrypt to compare the entered password with the hashed password
-	return await bcrypt.compare(enteredPassword, this.password)
+	return bcrypt.compare(enteredPassword, this.password)
 }
 
 userSchema.methods.getResetToken = async function () {
