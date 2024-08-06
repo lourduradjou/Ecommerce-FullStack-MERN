@@ -29,7 +29,7 @@ const orderSchema = mongoose.Schema({
 	user: {
 		type: mongoose.SchemaTypes.ObjectId,
 		required: true, // User ID who placed the order
-		ref: 'UserModel', // Reference to the User model to link the order with the user
+		ref: 'User', // Reference to the User model to link the order with the user
 	},
 	// Information about the items in the order
 	orderItems: [{
@@ -52,7 +52,7 @@ const orderSchema = mongoose.Schema({
 		product: {
 			type: mongoose.SchemaTypes.ObjectId,
 			required: true, // Product ID from the product collection
-			ref: 'ProductModel', // Reference to the Product model to link the order item with the product
+			ref: 'Product', // Reference to the Product model to link the order item with the product
 		},
 	}],
 	// Price details for the items in the order

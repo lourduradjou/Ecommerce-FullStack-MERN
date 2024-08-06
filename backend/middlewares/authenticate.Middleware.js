@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken') // Import the jsonwebtoken library for handling JWTs
-const userModel = require('../models/user.model') // Import the user model to interact with the user collection
+const User = require('../models/user.model') // Import the user model to interact with the user collection
 const ErrorHandler = require('../utils/errorHandlerClass') // Import the custom error handler class
 const catchAsyncErrorMiddleware = require('./catchAsyncError.Middleware') // Import the utility for handling asynchronous errors
 
@@ -20,7 +20,7 @@ exports.isAuthenticatedUser = catchAsyncErrorMiddleware(
 		const decoded = jwt.verify(token, process.env.JWT_SECRET) // Use the secret key to decode the token
 
 		// Fetch the user document from the database using the user ID obtained from the token
-		req.user = await userModel.findById(decoded.id)	
+		req.user = await User.findById(decoded.id)	
 
 		// If no user is found, handle this situation
 		if (!req.user) {

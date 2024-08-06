@@ -1,5 +1,5 @@
 // Importing required modules
-const UserModel = require('../models/user.model');
+const User = require('../models/user.model');
 const ErrorHandler = require('../utils/errorHandlerClass');
 const catchAsyncError = require('../middlewares/catchAsyncError.Middleware');
 
@@ -9,7 +9,7 @@ const catchAsyncError = require('../middlewares/catchAsyncError.Middleware');
 // Endpoint:  /api/v1/admin/users
 exports.getAllUsers = catchAsyncError(async (req, res, next) => {
 	// Retrieve all users from the database
-	const users = await UserModel.find();
+	const users = await User.find();
 	// Send a response with status 200 and the retrieved users
 	res.status(200).json({
 		success: true,
@@ -21,7 +21,7 @@ exports.getAllUsers = catchAsyncError(async (req, res, next) => {
 // Endpoint:  /api/v1/admin/user/:id
 exports.getSpecificUser = catchAsyncError(async (req, res, next) => {
 	// Retrieve a specific user from the database using their ID from the request parameters
-	const user = await UserModel.findById(req.params.id);
+	const user = await User.findById(req.params.id);
 
 	// If the user is not found, pass an error to the error handler with a 404 status code
 	if (!user) return next(new ErrorHandler('User not found!', 404));
@@ -46,7 +46,7 @@ exports.updateUser = catchAsyncError(async (req, res, next) => {
 	// Find the user by ID and update their details with the new data
 	// The 'new: true' option ensures the response contains the updated document
 	// The 'runValidators: true' option ensures the update validates against the model's schema
-	const updatedUser = await UserModel.findByIdAndUpdate(
+	const updatedUser = await User.findByIdAndUpdate(
 		req.params.id,
 		newUserData,
 		{
@@ -66,13 +66,13 @@ exports.updateUser = catchAsyncError(async (req, res, next) => {
 // Endpoint:  /api/v1/admin/user/:id
 exports.deleteUser = catchAsyncError(async (req, res, next) => {
 	// Retrieve a specific user from the database using their ID from the request parameters
-	const user = await UserModel.findById(req.params.id);
+	const user = await User.findById(req.params.id);
 
 	// If the user is not found, pass an error to the error handler with a 404 status code
 	if (!user) return next(new ErrorHandler('User not found!', 404));
 
 	// Remove the user from the database using findByIdAndDelete method
-	await UserModel.findByIdAndDelete(req.params.id);
+	await User.findByIdAndDelete(req.params.id);
 
 	// Send a response indicating success and include a success message
 	res.status(200).json({

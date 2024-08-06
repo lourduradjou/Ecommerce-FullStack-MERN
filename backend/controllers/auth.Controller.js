@@ -1,6 +1,6 @@
 // Import middleware and utility functions
 const catchAsyncError = require('../middlewares/catchAsyncError.Middleware')
-const UserModel = require('../models/user.model')
+const User = require('../models/user.model')
 const sendEmail = require('../utils/email')
 const ErrorHandler = require('../utils/errorHandlerClass')
 const sendToken_And_Response = require('../utils/JWTUtils')
@@ -39,7 +39,7 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
     const { email, name, password, avatar, role } = req.body;
 
     // Create a new user in the database with the provided details
-    const user = await UserModel.create({
+    const user = await User.create({
         name,
         email,
         password,
@@ -66,7 +66,7 @@ exports.loginUser = catchAsyncError(async (req, res, next) => {
     }
 
     // Find the user by email and include the password field for verification
-    const user = await UserModel.findOne({ email }).select('+password');
+    const user = await User.findOne({ email }).select('+password');
 
     // If user does not exist, return an error
     if (!user) return next(new ErrorHandler('Invalid Email or Password', 401));
@@ -99,7 +99,7 @@ exports.logoutUser = (req, res, next) => {
 // Endpoint: POST api/v1/password/forgot
 exports.forgotPassword = catchAsyncError(async (req, res, next) => {
     // Find the user in the database using the provided email
-    const user = await UserModel.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email });
 
     // If no user is found, return a 404 error
     if (!user) {
@@ -151,7 +151,7 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
     const hashedToken = crypto.createHash('sha256').update(requestedToken).digest('hex');
 
     // Find the user based on the hashed token and its expiration time
-    const user = await UserModel.findOne({
+    const user = await User.findOne({
         resetPasswordToken: hashedToken,
         resetPasswordTokenExpire: {
             $gt: Date.now(), // Check if the token is not expired
@@ -184,7 +184,7 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
 // Endpoint: GET api/v1/myprofile
 exports.getUserProfile = catchAsyncError(async (req, res, next) => {
     // Retrieve the user details from the database using the user ID from the request
-    const user = await UserModel.findById(req.user.id); // req.user.id is assumed to be set by authentication middleware
+    const user = await User.findById(req.user.id); // req.user.id is assumed to be set by authentication middleware
 
     // Respond with the user details, excluding the password
     res.status(200).json({
@@ -197,7 +197,7 @@ exports.getUserProfile = catchAsyncError(async (req, res, next) => {
 // Endpoint: PUT api/v1/password/change
 exports.changePassword = catchAsyncError(async (req, res, next) => {
     // Retrieve the user details from the database, including the hashed password for comparison
-    const user = await UserModel.findById(req.user.id).select('+password'); // '+password' ensures the password field is included
+    const user = await User.findById(req.user.id).select('+password'); // '+password' ensures the password field is included
 
     // Get the old password from the request body
     const oldPassword = req.body.oldPassword;
@@ -231,7 +231,7 @@ exports.updateProfile = catchAsyncError(async (req, res, next) => {
     };
 
     // Find the user by their ID and update their data
-    const updatedUser = await UserModel.findByIdAndUpdate(req.user.id, newUserData, {
+    const updatedUser = await User.findByIdAndUpdate(req.user.id, newUserData, {
         new: true, // Return the updated document
         runValidators: true, // Validate the new data against the model's schema
     });
@@ -244,7 +244,7 @@ exports.updateProfile = catchAsyncError(async (req, res, next) => {
 });
 
 exports.getAllUsers = catchAsyncError(async (req, res, next) => {
-	const users = await UserModel.find() //retrieves all users in the db
+	const users = await User.find() //retrieves all users in the db
 	res.status(200).json({
 		success: true,
 		users,
