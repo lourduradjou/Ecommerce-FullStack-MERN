@@ -6,6 +6,7 @@ const connectDatabase = require('./config/connectDB')
 const errorMiddleware = require('./middlewares/error.Middleware')
 const authRoutes = require('./routes/auth.Routes')
 const authAdminRoutes = require('./routes/authAdmin.Routes')
+const orderRoutes = require('./routes/order.Routes')
 const cookieParser = require('cookie-parser')
 //getting the express object to work with its functions..
 const app = express()
@@ -30,6 +31,8 @@ app.use('/api/v1/', authRoutes)
 // middleware to apply routing related to admin controlles
 app.use('/api/v1/', authAdminRoutes)
 
+// middleware to apply routing related to order controllers
+app.use('/api/v1/', orderRoutes)
 //middleware to handle Validation and Cast Error seperately for development and seperately for the production(to the user)
 app.use(errorMiddleware)
 

@@ -1,0 +1,80 @@
+[
+	{
+		"orderItems": [
+			{
+				"name": "Wireless Bluetooth Headphones",
+				"quantity": 2,
+				"image": "image1.jpg",
+				"price": 299.99,
+				"product": "66abb56eed7838bba78f7e4b"
+			}
+		],
+		"shippingInfo": {
+			"address": "123 Elm Street",
+			"country": "USA",
+			"city": "New York",
+			"phoneNo": "123-456-7890",
+			"postelCode": "10001"
+		},
+		"itemsPrice": 599.98,
+		"taxPrice": 59.99,
+		"shippingPrice": 10.0,
+		"totalPrice": 669.97,
+		"paymentInfo": {
+			"id": "paymentID1",
+			"status": "Paid"
+		}
+	},
+	{
+		"orderItems": [
+			{
+				"name": "Gaming Laptop",
+				"quantity": 1,
+				"image": "gaming_laptop.jpg",
+				"price": 1499.99,
+				"product": "66b217ead32a30a06603a011"
+			}
+		],
+		"shippingInfo": {
+			"address": "456 Oak Avenue",
+			"country": "USA",
+			"city": "Los Angeles",
+			"phoneNo": "987-654-3210",
+			"postelCode": "90001"
+		},
+		"itemsPrice": 1499.99,
+		"taxPrice": 149.99,
+		"shippingPrice": 15.0,
+		"totalPrice": 1664.98,
+		"paymentInfo": {
+			"id": "paymentID2",
+			"status": "Paid"
+		}
+	},
+	{
+		"orderItems": [
+			{
+				"name": "Organic Almonds",
+				"quantity": 5,
+				"image": "almonds.jpg",
+				"price": 15.99,
+				"product": "66b21823d32a30a06603a017"
+			}
+		],
+		"shippingInfo": {
+			"address": "789 Pine Road",
+			"country": "USA",
+			"city": "San Francisco",
+			"phoneNo": "555-123-4567",
+			"postelCode": "94101"
+		},
+		"itemsPrice": 79.95,
+		"taxPrice": 7.99,
+		"shippingPrice": 5.0,
+		"totalPrice": 92.94,
+		"paymentInfo": {
+			"id": "paymentID3",
+			"status": "Paid"
+		}
+	}
+]
