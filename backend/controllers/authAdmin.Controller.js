@@ -6,6 +6,7 @@ const catchAsyncError = require('../middlewares/catchAsyncError.Middleware');
 // * ---------------------------- Admin Controllers (Update, Create, Delete, Read) -> (CRUD) --------------------------------
 
 // Get all users from the database
+// Endpoint:  /api/v1/admin/users
 exports.getAllUsers = catchAsyncError(async (req, res, next) => {
 	// Retrieve all users from the database
 	const users = await UserModel.find();
@@ -17,6 +18,7 @@ exports.getAllUsers = catchAsyncError(async (req, res, next) => {
 });
 
 // Get a specific user by their ID
+// Endpoint:  /api/v1/admin/user/:id
 exports.getSpecificUser = catchAsyncError(async (req, res, next) => {
 	// Retrieve a specific user from the database using their ID from the request parameters
 	const user = await UserModel.findById(req.params.id);
@@ -32,6 +34,7 @@ exports.getSpecificUser = catchAsyncError(async (req, res, next) => {
 });
 
 // Update user details by their ID
+// Endpoint:  /api/v1/admin/user/:id
 exports.updateUser = catchAsyncError(async (req, res, next) => {
 	// Create an object with the new user data from the request body
 	const newUserData = {
@@ -60,6 +63,7 @@ exports.updateUser = catchAsyncError(async (req, res, next) => {
 });
 
 // Delete a user by their ID
+// Endpoint:  /api/v1/admin/user/:id
 exports.deleteUser = catchAsyncError(async (req, res, next) => {
 	// Retrieve a specific user from the database using their ID from the request parameters
 	const user = await UserModel.findById(req.params.id);
