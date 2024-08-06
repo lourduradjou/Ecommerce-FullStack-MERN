@@ -28,7 +28,7 @@ app.use('/api/v1/', productRoutes)
 app.use('/api/v1/', authRoutes)
 
 // middleware to apply routing related to admin controlles
-app.use('api/v1/', authAdminRoutes)
+app.use('/api/v1/', authAdminRoutes)
 
 //middleware to handle Validation and Cast Error seperately for development and seperately for the production(to the user)
 app.use(errorMiddleware)

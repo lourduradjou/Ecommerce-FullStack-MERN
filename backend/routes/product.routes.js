@@ -16,10 +16,7 @@ const router = express.Router()
 
 //get all products details route
 router.route('/products').get(isAuthenticatedUser, getProducts)
-//create a new product route
-router
-	.route('/product/new')
-	.post(isAuthenticatedUser, authorizeRoles('admin'), newProduct)
+
 //get a single product details route
 router
 	.route('/product/:id')
@@ -28,9 +25,10 @@ router
 	.delete(isAuthenticatedUser,authorizeRoles('admin'), deleteProduct) //three request for the same uri combined
 //router.route('/product/:id').put(updateProduct) - can be like this also
 
-//delete a product details route
-// router.route('/product/:id').delete(deleteProduct)
-
+//create a new product route
+router
+	.route('/admin/product/new')
+	.post(isAuthenticatedUser, authorizeRoles('admin'), newProduct)
 module.exports = router
 
 // GET: Retrieve data from the server. Used to request and retrieve a resource.

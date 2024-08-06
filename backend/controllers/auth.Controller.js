@@ -194,7 +194,7 @@ exports.getUserProfile = catchAsyncError(async (req, res, next) => {
 });
 
 // Change password of the user
-// Endpoint: POST api/v1/password/change
+// Endpoint: PUT api/v1/password/change
 exports.changePassword = catchAsyncError(async (req, res, next) => {
     // Retrieve the user details from the database, including the hashed password for comparison
     const user = await UserModel.findById(req.user.id).select('+password'); // '+password' ensures the password field is included
@@ -221,21 +221,32 @@ exports.changePassword = catchAsyncError(async (req, res, next) => {
     });
 });
 
-//updating the user profile
-//
+// Controller function to update the user profile
+// Endpoint: PUT api/v1/update 
 exports.updateProfile = catchAsyncError(async (req, res, next) => {
-	const newUserData = {
-		name: req.body.name,
-		email: req.body.email
-	}
+    // Create an object to hold the new user data from the request body
+    const newUserData = {
+        name: req.body.name, // Get the name from the request body
+        email: req.body.email // Get the email from the request body
+    };
 
-	const updatedUser = UserModel.findByIdAndUpdate(req.user.id, newUserData, {
-		new: true,
-		runValidators: true,
-	})
+    // Find the user by their ID and update their data
+    const updatedUser = await UserModel.findByIdAndUpdate(req.user.id, newUserData, {
+        new: true, // Return the updated document
+        runValidators: true, // Validate the new data against the model's schema
+    });
 
+    // Respond with a success status and the updated user data
+    res.status(200).json({
+        success: true, // Indicate the operation was successful
+        updatedUser // Return the updated user object
+    });
+});
+
+exports.getAllUsers = catchAsyncError(async (req, res, next) => {
+	const users = await UserModel.find() //retrieves all users in the db
 	res.status(200).json({
 		success: true,
-		updatedUser
+		users,
 	})
 })
