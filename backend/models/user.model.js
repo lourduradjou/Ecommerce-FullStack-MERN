@@ -107,7 +107,7 @@ userSchema.methods.getResetToken = async function () {
 }
 
 // Create a Mongoose model based on the user schema
-const Model = mongoose.model('User', userSchema)
+const UserModel = mongoose.model('User', userSchema)
 
 // Export the User model for use in other parts of the application
-module.exports = Model
+module.exports = UserModel

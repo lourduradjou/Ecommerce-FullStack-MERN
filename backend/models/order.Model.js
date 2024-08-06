@@ -29,10 +29,10 @@ const orderSchema = mongoose.Schema({
 	user: {
 		type: mongoose.SchemaTypes.ObjectId,
 		required: true, // User ID who placed the order
-		ref: 'User', // Reference to the User model to link the order with the user
+		ref: 'UserModel', // Reference to the User model to link the order with the user
 	},
 	// Information about the items in the order
-	orderItems: {
+	orderItems: [{
 		name: {
 			type: String,
 			required: true, // Name of the product ordered
@@ -52,9 +52,9 @@ const orderSchema = mongoose.Schema({
 		product: {
 			type: mongoose.SchemaTypes.ObjectId,
 			required: true, // Product ID from the product collection
-			ref: 'Product', // Reference to the Product model to link the order item with the product
+			ref: 'ProductModel', // Reference to the Product model to link the order item with the product
 		},
-	},
+	}],
 	// Price details for the items in the order
 	itemsPrice: {
 		type: Number,
@@ -91,6 +91,7 @@ const orderSchema = mongoose.Schema({
 	orderStatus: {
 		type: String,
 		required: true, // Current status of the order (e.g., pending, shipped, delivered)
+		default: 'Processing'
 	},
 	// Timestamp when the order was created
 	createdAt: {

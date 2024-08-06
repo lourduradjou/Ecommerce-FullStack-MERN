@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const productSchema = new mongoose.Schema({
 	//Product created by which user , ID of the user
 	user: {
-		type: mongoose.Schema.Types.ObjectId
+		type: mongoose.Schema.Types.ObjectId,
 	},
 	// Name of the product
 	name: {
@@ -87,21 +87,21 @@ const productSchema = new mongoose.Schema({
 				type: String,
 				required: true, // Ensure rating is provided
 			},
-            comment: {
-                type: String,
-                required: true // Ensure review comment is provided
-            }
+			comment: {
+				type: String,
+				required: true, // Ensure review comment is provided
+			},
 		},
 	],
-    // Date when the product was created
-    createdAt: {
-        type: Date,
-        default: Date.now // Default creation date as the current date
-    }
+	// Date when the product was created
+	createdAt: {
+		type: Date,
+		default: Date.now, // Default creation date as the current date
+	},
 })
 
 // Create the Product model using the schema
-let productModel = mongoose.model('Product', productSchema)
+let ProductModel = mongoose.model('Product', productSchema)
 
 // Export the Product model
-module.exports = productModel
+module.exports = ProductModel
