@@ -3,7 +3,7 @@ const {
 	isAuthenticatedUser,
 	authorizeRoles,
 } = require('../middlewares/authenticate.Middleware')
-const { orders } = require('../controllers/orderAdmin.Controller')
+const { orders, updateOrder } = require('../controllers/orderAdmin.Controller')
 
 // Creating a new router instance
 const router = express.Router()
@@ -16,4 +16,9 @@ router.route('/orders').get(
 	orders // Controller function to handle the request
 )
 
+router.route('/order/update/:id').put(
+	isAuthenticatedUser, // Middleware to check if the user is authenticated
+	authorizeRoles('admin'), // Middleware to check if the user has admin role
+	updateOrder // Controller function to handle the request
+)
 module.exports = router
