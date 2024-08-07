@@ -3,7 +3,7 @@
 		"name": "Wireless Bluetooth Headphones",
 		"price": 299.99,
 		"description": "High-quality wireless headphones with noise-cancellation and long battery life.",
-		"ratings": "4.5",
+		"ratings": 4.5,
 		"images": [{ "image": "image1.jpg" }, { "image": "image2.jpg" }],
 		"categories": "HeadPhones",
 		"seller": "AudioTech",
@@ -12,12 +12,12 @@
 		"reviews": [
 			{
 				"name": "John Doe",
-				"rating": "5",
+				"rating": 5,
 				"comment": "Excellent sound quality!"
 			},
 			{
 				"name": "Jane Smith",
-				"rating": "4",
+				"rating": 4,
 				"comment": "Comfortable, but a bit pricey."
 			}
 		],
@@ -27,7 +27,7 @@
 		"name": "Gaming Laptop",
 		"price": 1499.99,
 		"description": "Powerful gaming laptop with high-end graphics and fast processor.",
-		"ratings": "4.8",
+		"ratings": 4.8,
 		"images": [{ "image": "gaming_laptop.jpg" }],
 		"categories": "Laptops",
 		"seller": "GamerWorld",
@@ -36,12 +36,12 @@
 		"reviews": [
 			{
 				"name": "Alice Green",
-				"rating": "5",
+				"rating": 5,
 				"comment": "Runs all the latest games smoothly!"
 			},
 			{
 				"name": "Bob Brown",
-				"rating": "4",
+				"rating": 4,
 				"comment": "Great performance, but gets a bit hot."
 			}
 		],
@@ -51,7 +51,7 @@
 		"name": "Organic Almonds",
 		"price": 15.99,
 		"description": "Organic almonds rich in nutrients and perfect for snacking.",
-		"ratings": "4.3",
+		"ratings": 4.3,
 		"images": [{ "image": "almonds.jpg" }],
 		"categories": "Food",
 		"seller": "HealthySnacks",
@@ -60,12 +60,12 @@
 		"reviews": [
 			{
 				"name": "Charlie King",
-				"rating": "5",
+				"rating": 5,
 				"comment": "Fresh and tasty!"
 			},
 			{
 				"name": "Dana White",
-				"rating": "3",
+				"rating": 3,
 				"comment": "A bit expensive, but good quality."
 			}
 		],
@@ -75,7 +75,7 @@
 		"name": "Smartphone",
 		"price": 699.99,
 		"description": "Latest model smartphone with advanced features and sleek design.",
-		"ratings": "4.7",
+		"ratings": 4.7,
 		"images": [{ "image": "smartphone.jpg" }],
 		"categories": "Mobile Phones",
 		"seller": "TechStore",
@@ -84,12 +84,12 @@
 		"reviews": [
 			{
 				"name": "Eve Blue",
-				"rating": "5",
+				"rating": 5,
 				"comment": "Amazing camera and battery life."
 			},
 			{
 				"name": "Frank Red",
-				"rating": "4",
+				"rating": 4,
 				"comment": "Great phone, but could be more durable."
 			}
 		],
@@ -99,7 +99,7 @@
 		"name": "Yoga Mat",
 		"price": 29.99,
 		"description": "Comfortable and non-slip yoga mat, perfect for all types of exercises.",
-		"ratings": "4.2",
+		"ratings": 4.2,
 		"images": [{ "image": "yoga_mat.jpg" }],
 		"categories": "Sports",
 		"seller": "FitLife",
@@ -108,12 +108,12 @@
 		"reviews": [
 			{
 				"name": "Grace Purple",
-				"rating": "4",
+				"rating": 4,
 				"comment": "Good quality, but slightly thin."
 			},
 			{
 				"name": "Henry Orange",
-				"rating": "5",
+				"rating": 5,
 				"comment": "Perfect for my daily yoga practice."
 			}
 		],

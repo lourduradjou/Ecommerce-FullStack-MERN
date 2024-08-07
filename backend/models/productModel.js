@@ -26,7 +26,7 @@ const productSchema = new mongoose.Schema({
 	},
 	// Ratings of the product
 	ratings: {
-		type: String,
+		type: Number,
 		default: 0, // Default rating value if not provided
 	},
 	// Array of images associated with the product
@@ -79,12 +79,9 @@ const productSchema = new mongoose.Schema({
 	// Array of reviews for the product
 	reviews: [
 		{
-			name: {
-				type: String,
-				required: true, // Ensure reviewer's name is provided
-			},
+			user: mongoose.Schema.Types.ObjectId,
 			rating: {
-				type: String,
+				type: Number,
 				required: true, // Ensure rating is provided
 			},
 			comment: {
