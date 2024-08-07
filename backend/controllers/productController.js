@@ -99,6 +99,71 @@ exports.deleteProduct = catchAsyncError(async (req, res, next) => {
 	})
 })
 
+// Create Review - API endpoint: api/v1/review
+exports.createReview = catchAsyncError(async (req, res, next) => {
+	// Destructure the necessary data from the request body
+	const { productId, rating, comment } = req.body
+
+	// Create a new review object with user ID, rating (converted to float), and comment
+	const review = {
+		user: req.user.id,
+		rating: parseFloat(rating), // Ensure rating is a number
+		comment,
+	}
+
+	// Find the product by its ID
+	const product = await Product.findById(productId)
+
+	// If the product is not found, return a 404 response
+	if (!product) {
+		return res.status(404).json({
+			success: false,
+			message: 'Product not found',
+		})
+	}
+
+	// Check if the user has already reviewed this product
+	const existingReviewIndex = product.reviews.findIndex(
+		(r) => r.user?.toString() === req.user?.id?.toString()
+	)
+
+	if (existingReviewIndex !== -1) {
+		// If an existing review is found, update the review's comment and rating
+		product.reviews[existingReviewIndex].comment = comment
+		product.reviews[existingReviewIndex].rating = rating
+	} else {
+		// If no existing review is found, add the new review to the product's reviews
+		product.reviews.push(review)
+	}
+
+	// Update the number of reviews for the product
+	product.numOfReviews = product.reviews.length
+
+	// Calculate the total rating from all reviews
+	const totalRating = product.reviews.reduce((acc, review) => {
+		console.log(review.rating) // Debugging output
+		return acc + (review.rating || 0) // Ensure each rating is treated as a number
+	}, 0)
+
+	console.log('totalRating: ', totalRating) // Debugging output
+
+	// Calculate the average rating
+	product.ratings =
+		product.numOfReviews > 0 ? totalRating / product.numOfReviews : 0
+
+	console.log(product.ratings) // Debugging output
+
+	// Save the updated product document without validation
+	await product.save({ validateBeforeSave: false })
+
+	// Send a successful response indicating the review was added or changed
+	res.status(200).json({
+		success: true,
+		message: 'Review was successfully added/changed',
+	})
+})
+
+// * -----not related to the product ----------personal notes-------------
 // 1xx: Informational
 // - 100 Continue: Request received, continue to send the rest of the request.
 // - 101 Switching Protocols: Switching to the protocol specified in the Upgrade header.

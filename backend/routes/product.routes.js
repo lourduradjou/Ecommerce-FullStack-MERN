@@ -5,6 +5,7 @@ const {
 	getSingleProduct,
 	updateProduct,
 	deleteProduct,
+	createReview,
 } = require('../controllers/productController')
 const {
 	isAuthenticatedUser,
@@ -14,10 +15,10 @@ const router = express.Router()
 
 //routes to work with , example get and put request of the products
 
-//get all products details route
+//get all products details route -> api/v1/products
 router.route('/products').get(isAuthenticatedUser, getProducts)
 
-//get a single product details route
+//get a single product details route -> api/v1/product/:id
 router
 	.route('/product/:id')
 	.get(isAuthenticatedUser,getSingleProduct)
@@ -25,10 +26,14 @@ router
 	.delete(isAuthenticatedUser,authorizeRoles('admin'), deleteProduct) //three request for the same uri combined
 //router.route('/product/:id').put(updateProduct) - can be like this also
 
-//create a new product route
+//create a new product route -> api/v1/admin/product/:id
 router
 	.route('/admin/product/new')
 	.post(isAuthenticatedUser, authorizeRoles('admin'), newProduct)
+
+//create a new route to handle review created by a user for a specific product  -> api/v1/review/create
+router.route('/review/create').put(isAuthenticatedUser, createReview)
+
 module.exports = router
 
 // GET: Retrieve data from the server. Used to request and retrieve a resource.
