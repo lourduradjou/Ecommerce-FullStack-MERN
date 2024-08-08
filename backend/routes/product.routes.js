@@ -6,6 +6,8 @@ const {
 	updateProduct,
 	deleteProduct,
 	createReview,
+	getReviews,
+	deleteReview,
 } = require('../controllers/productController')
 const {
 	isAuthenticatedUser,
@@ -31,9 +33,11 @@ router
 	.route('/admin/product/new')
 	.post(isAuthenticatedUser, authorizeRoles('admin'), newProduct)
 
-//create a new route to handle review created by a user for a specific product  -> api/v1/review/create
+//Route to handle review created by a user for a specific product  -> api/v1/review/create
 router.route('/review/create').put(isAuthenticatedUser, createReview)
 
+//Route to get reviews of a specific product -> api/v1/reviews?id={productId}
+router.route('/reviews').get(isAuthenticatedUser, getReviews).delete(isAuthenticatedUser, deleteReview)
 module.exports = router
 
 // GET: Retrieve data from the server. Used to request and retrieve a resource.

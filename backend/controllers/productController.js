@@ -124,7 +124,7 @@ exports.createReview = catchAsyncError(async (req, res, next) => {
 
 	// Check if the user has already reviewed this product
 	const existingReviewIndex = product.reviews.findIndex(
-		(r) => r.user?.toString() === req.user?.id?.toString()
+		(review) => review.user?.toString() === req.user?.id?.toString()
 	)
 
 	if (existingReviewIndex !== -1) {
@@ -141,17 +141,12 @@ exports.createReview = catchAsyncError(async (req, res, next) => {
 
 	// Calculate the total rating from all reviews
 	const totalRating = product.reviews.reduce((acc, review) => {
-		console.log(review.rating) // Debugging output
 		return acc + (review.rating || 0) // Ensure each rating is treated as a number
 	}, 0)
-
-	console.log('totalRating: ', totalRating) // Debugging output
 
 	// Calculate the average rating
 	product.ratings =
 		product.numOfReviews > 0 ? totalRating / product.numOfReviews : 0
-
-	console.log(product.ratings) // Debugging output
 
 	// Save the updated product document without validation
 	await product.save({ validateBeforeSave: false })
@@ -162,6 +157,56 @@ exports.createReview = catchAsyncError(async (req, res, next) => {
 		message: 'Review was successfully added/changed',
 	})
 })
+
+// Get Reviews - api/v1/reviews?id={productId}
+exports.getReviews = catchAsyncError(async (req, res, next) => {
+    // Find the product by ID from the request query parameters
+    const product = await Product.findById(req.query.id)
+
+    // Send a successful response with the product's reviews
+    res.status(200).json({
+        success: true,
+        reviews: product.reviews,
+    })
+})
+
+
+// Delete Review - api/v1/reviews?id={reviewId}&productId={productId}
+exports.deleteReview = catchAsyncError(async (req, res, next) => {
+    // Find the product by ID from the request query parameters
+    const product = await Product.findById(req.query.productId)
+    
+    // Filter out the review that matches the review ID from the query parameters
+    const reviews = product.reviews.filter((review) => {
+        return review._id.toString() !== req.query.id.toString() 
+    })
+    console.log(reviews)
+    
+    // Get the updated number of reviews after deletion
+    const numOfReviews = reviews.length
+    
+    // Calculate the total rating from the remaining reviews
+    const totalRating = reviews.reduce((acc, review) => {
+        return acc + (review.rating || 0) // Ensure each rating is treated as a number
+    }, 0)
+
+    // Calculate the average rating; handle cases where numOfReviews is zero
+    let ratings = numOfReviews > 0 ? totalRating / numOfReviews : 0
+
+    // Update the product with the new reviews, number of reviews, and ratings
+    await Product.findByIdAndUpdate(req.query.productId, {
+        reviews,
+        numOfReviews,
+        ratings
+    })
+    
+    // Send a successful response indicating the review was deleted
+    res.status(200).json({
+        success: true,
+        message: "Successfully deleted the review"
+    })
+})
+
 
 // * -----not related to the product ----------personal notes-------------
 // 1xx: Informational
