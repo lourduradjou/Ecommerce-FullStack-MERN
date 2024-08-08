@@ -1,7 +1,4 @@
 import React from 'react'
-import { Mail } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { DropdownMenuDemo } from './ui/dropDownDemo'
 
 const Navbar = () => {
 	return (
@@ -37,14 +34,17 @@ const Navbar = () => {
 						</div>
 					</div>
 				</div>
-				<DropdownMenuDemo />
+
 				<div className='items-center justify-around mx-4 hidden md:flex text-center'>
-					<Button>
-						<Mail className='mr-2 h-4 w-4' /> Login with Email
-					</Button>
+					{/* Login Button */}
+					<span className='ml-4 text-black font-medium px-6 py-2 rounded bg-walmartYellow'>
+						Login
+					</span>
+
+					{/* Cart Element */}
 					<span className='ml-4 text-black font-medium px-6 py-2 rounded bg-walmartYellow'>
 						Cart
-						<span className='ml-2  py-1 rounded text-black font-medium'>
+						<span className='ml-2 py-1 rounded text-black font-medium'>
 							2
 						</span>
 					</span>

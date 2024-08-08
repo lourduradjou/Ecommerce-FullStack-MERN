@@ -18,7 +18,7 @@ const Home = () => {
 						<div className='bg-white shadow-md rounded-lg overflow-hidden p-3'>
 							<img
 								className='w-full h-48 object-contain'
-								src='./images/products/1.jpg'
+								src='./products/1.jpg'
 								alt='Product 1'
 							/>
 							<div className='flex flex-col p-4'>
@@ -62,7 +62,7 @@ const Home = () => {
 						<div className='bg-white shadow-md rounded-lg overflow-hidden p-3'>
 							<img
 								className='w-full h-48 object-contain'
-								src='./images/products/2.jpg'
+								src='./products/2.jpg'
 								alt='Product 2'
 							/>
 							<div className='flex flex-col p-4'>
@@ -106,7 +106,7 @@ const Home = () => {
 						<div className='bg-white shadow-md rounded-lg overflow-hidden p-3'>
 							<img
 								className='w-full h-48 object-contain'
-								src='./images/products/3.jpg'
+								src='./products/3.jpg'
 								alt='Product 3'
 							/>
 							<div className='flex flex-col p-4'>
@@ -149,7 +149,7 @@ const Home = () => {
 						<div className='bg-white shadow-md rounded-lg overflow-hidden p-3'>
 							<img
 								className='w-full h-48 object-contain'
-								src='./images/products/4.jpg'
+								src='./products/4.jpg'
 								alt='Product 4'
 							/>
 							<div className='flex flex-col p-4'>
@@ -192,7 +192,7 @@ const Home = () => {
 						<div className='bg-white shadow-md rounded-lg overflow-hidden p-3'>
 							<img
 								className='w-full h-48 object-contain'
-								src='./images/products/5.jpg'
+								src='./products/5.jpg'
 								alt='Product 5'
 							/>
 							<div className='flex flex-col p-4'>

@@ -11,9 +11,9 @@ const App = () => {
 			<div className='bg-slate-100 h-screen w-full'>
 				<HelmetProvider>
 					<Navbar />
-            <Routes>
-              <Route path='/' element={<Home />} />
-            </Routes>
+					<Routes>
+						<Route path='/' element={<Home />} />
+					</Routes>
 					<Footer />
 				</HelmetProvider>
 			</div>
@@ -22,3 +22,5 @@ const App = () => {
 }
 
 export default App
+
+
