@@ -54,6 +54,9 @@ module.exports = {
 				walmartBlue: {
 					DEFAULT: '#0071dc',
 				},
+				walmartYellow: {
+					DEFAULT: '#eab308',
+				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

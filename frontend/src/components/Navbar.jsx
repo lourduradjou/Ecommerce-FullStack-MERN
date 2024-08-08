@@ -13,10 +13,11 @@ const Navbar = () => {
 						src='./images/walmartLogo.png'
 						alt='Walmart Logo'
 					/>
-					<p className='text-medium text-xl p-2'>
+
+					<h1 className='text-xl font-bold text-black'>
 						Walmart -{' '}
-						<span className='text-yellow-500'>InvenOptix</span>
-					</p>
+						<span className='text-walmartYellow'>InvenOptix</span>
+					</h1>
 					<div className='flex-1 mx-4'>
 						<div className='relative w-1/2 md:w-3/4 mx-auto'>
 							<input
@@ -41,7 +42,7 @@ const Navbar = () => {
 					<Button>
 						<Mail className='mr-2 h-4 w-4' /> Login with Email
 					</Button>
-					<span className='ml-4 text-black font-medium px-6 py-2 rounded bg-amber-500'>
+					<span className='ml-4 text-black font-medium px-6 py-2 rounded bg-walmartYellow'>
 						Cart
 						<span className='ml-2  py-1 rounded text-black font-medium'>
 							2
