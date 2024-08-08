@@ -1,5 +1,5 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
-import productsReducer from './slices/productsSlice'
+import productsReducer from './productsSlice'
 import { thunk } from 'redux-thunk'
 
 const reducer = combineReducers({

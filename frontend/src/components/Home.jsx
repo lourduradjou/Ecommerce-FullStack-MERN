@@ -23,7 +23,7 @@ const Home = () => {
 							/>
 							<div className='flex flex-col p-4'>
 								<h5 className='text-lg font-bold mb-2'>
-									<a href='#' className='hover:underline'>
+									<a href='/' className='hover:underline'>
 										OPPO F21s Pro 5G (Dawnlight Gold, 8GB
 										RAM, 128 Storage) with No Cost
 										EMI/Additional Exchange Offers
@@ -48,7 +48,7 @@ const Home = () => {
 									$245.67
 								</p>
 								<a
-									href='#'
+									href='/'
 									id='view_btn'
 									className='btn btn-blue mt-3'
 								>
@@ -67,7 +67,7 @@ const Home = () => {
 							/>
 							<div className='flex flex-col p-4'>
 								<h5 className='text-lg font-bold mb-2'>
-									<a href='#' className='hover:underline'>
+									<a href='/' className='hover:underline'>
 										WRISTIO HD, Bluetooth Calling Smart
 										Watch, 15 days battery life, Water
 										Resistant
@@ -92,7 +92,7 @@ const Home = () => {
 									$150.32
 								</p>
 								<a
-									href='#'
+									href='/'
 									id='view_btn'
 									className='btn btn-blue mt-3'
 								>
@@ -111,7 +111,7 @@ const Home = () => {
 							/>
 							<div className='flex flex-col p-4'>
 								<h5 className='text-lg font-bold mb-2'>
-									<a href='#' className='hover:underline'>
+									<a href='/' className='hover:underline'>
 										Dell Inspiron 3511 Laptop, Intel
 										i3-1115G4, 8GB, 512GB
 									</a>
@@ -135,7 +135,7 @@ const Home = () => {
 									$440.57
 								</p>
 								<a
-									href='#'
+									href='/'
 									id='view_btn'
 									className='btn btn-blue mt-3'
 								>
@@ -154,7 +154,7 @@ const Home = () => {
 							/>
 							<div className='flex flex-col p-4'>
 								<h5 className='text-lg font-bold mb-2'>
-									<a href='#' className='hover:underline'>
+									<a href='/' className='hover:underline'>
 										PTron Newly Launched Tangent Sports,
 										60Hrs Playtime
 									</a>
@@ -178,7 +178,7 @@ const Home = () => {
 									$15.46
 								</p>
 								<a
-									href='#'
+									href='/'
 									id='view_btn'
 									className='btn btn-blue mt-3'
 								>
@@ -197,7 +197,7 @@ const Home = () => {
 							/>
 							<div className='flex flex-col p-4'>
 								<h5 className='text-lg font-bold mb-2'>
-									<a href='#' className='hover:underline'>
+									<a href='/' className='hover:underline'>
 										Campus Men's Maxico Running Shoes
 									</a>
 								</h5>
@@ -220,7 +220,7 @@ const Home = () => {
 									$10.12
 								</p>
 								<a
-									href='#'
+									href='/'
 									id='view_btn'
 									className='btn btn-blue mt-3'
 								>
