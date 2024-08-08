@@ -1,8 +1,10 @@
 import React from 'react'
+import MetaData from './MetaData'
 
-const Body = () => {
+const Home = () => {
 	return (
-		<div>
+		<main>
+			<MetaData title='Best Products For You' />
 			<h1
 				id='products_heading'
 				className='text-3xl font-bold text-center my-8'
@@ -229,8 +231,8 @@ const Body = () => {
 					</div>
 				</div>
 			</section>
-		</div>
+		</main>
 	)
 }
 
-export default Body
+export default Home
