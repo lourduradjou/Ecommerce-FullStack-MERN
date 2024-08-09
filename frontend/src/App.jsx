@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 const App = () => {
 	return (
 		<Router>
-			<div className='bg-slate-100 h-screen w-full'>
+			<div>
 				<HelmetProvider>
 					<Navbar />
 					<Routes>

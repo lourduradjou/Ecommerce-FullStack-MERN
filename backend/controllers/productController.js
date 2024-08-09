@@ -13,7 +13,9 @@ exports.getProducts = catchAsyncError(async (req, res, next) => {
 		.paginate(resultsPerPage)
 
 	const products = await apiFeatures.productDetails //get the apiFeatures query which was send back using await ..
-
+	await new Promise((resolve) => {
+		setTimeout(resolve, 3000) // Waits for 3000 milliseconds (3 seconds)
+	})
 	res.status(200).json({
 		success: true,
 		count: products.length,
@@ -160,53 +162,51 @@ exports.createReview = catchAsyncError(async (req, res, next) => {
 
 // Get Reviews - api/v1/reviews?id={productId}
 exports.getReviews = catchAsyncError(async (req, res, next) => {
-    // Find the product by ID from the request query parameters
-    const product = await Product.findById(req.query.id)
+	// Find the product by ID from the request query parameters
+	const product = await Product.findById(req.query.id)
 
-    // Send a successful response with the product's reviews
-    res.status(200).json({
-        success: true,
-        reviews: product.reviews,
-    })
+	// Send a successful response with the product's reviews
+	res.status(200).json({
+		success: true,
+		reviews: product.reviews,
+	})
 })
-
 
 // Delete Review - api/v1/reviews?id={reviewId}&productId={productId}
 exports.deleteReview = catchAsyncError(async (req, res, next) => {
-    // Find the product by ID from the request query parameters
-    const product = await Product.findById(req.query.productId)
-    
-    // Filter out the review that matches the review ID from the query parameters
-    const reviews = product.reviews.filter((review) => {
-        return review._id.toString() !== req.query.id.toString() 
-    })
-    console.log(reviews)
-    
-    // Get the updated number of reviews after deletion
-    const numOfReviews = reviews.length
-    
-    // Calculate the total rating from the remaining reviews
-    const totalRating = reviews.reduce((acc, review) => {
-        return acc + (review.rating || 0) // Ensure each rating is treated as a number
-    }, 0)
+	// Find the product by ID from the request query parameters
+	const product = await Product.findById(req.query.productId)
 
-    // Calculate the average rating; handle cases where numOfReviews is zero
-    let ratings = numOfReviews > 0 ? totalRating / numOfReviews : 0
+	// Filter out the review that matches the review ID from the query parameters
+	const reviews = product.reviews.filter((review) => {
+		return review._id.toString() !== req.query.id.toString()
+	})
+	console.log(reviews)
 
-    // Update the product with the new reviews, number of reviews, and ratings
-    await Product.findByIdAndUpdate(req.query.productId, {
-        reviews,
-        numOfReviews,
-        ratings
-    })
-    
-    // Send a successful response indicating the review was deleted
-    res.status(200).json({
-        success: true,
-        message: "Successfully deleted the review"
-    })
+	// Get the updated number of reviews after deletion
+	const numOfReviews = reviews.length
+
+	// Calculate the total rating from the remaining reviews
+	const totalRating = reviews.reduce((acc, review) => {
+		return acc + (review.rating || 0) // Ensure each rating is treated as a number
+	}, 0)
+
+	// Calculate the average rating; handle cases where numOfReviews is zero
+	let ratings = numOfReviews > 0 ? totalRating / numOfReviews : 0
+
+	// Update the product with the new reviews, number of reviews, and ratings
+	await Product.findByIdAndUpdate(req.query.productId, {
+		reviews,
+		numOfReviews,
+		ratings,
+	})
+
+	// Send a successful response indicating the review was deleted
+	res.status(200).json({
+		success: true,
+		message: 'Successfully deleted the review',
+	})
 })
-
 
 // * -----not related to the product ----------personal notes-------------
 // 1xx: Informational
