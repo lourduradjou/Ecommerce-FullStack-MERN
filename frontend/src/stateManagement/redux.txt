@@ -1,0 +1,11 @@
+// **Store**: The central repository for the application's state. Created using `createStore()` and holds the entire state tree of the application.
+
+// **Actions**: Plain JavaScript objects that describe an event or change in the application. Must have a `type` property and can include additional data.
+
+// **Reducers**: Functions that determine how the state changes in response to an action. They take the current state and an action, and return a new state.
+
+// **Action Creators**: Functions that create and return action objects. They simplify action creation and ensure consistency in action shapes.
+
+// **Middleware**: Functions that intercept actions before they reach the reducer. Used for handling side effects, such as API calls or logging (e.g., `redux-thunk` for asynchronous actions).
+
+// * personal notes 

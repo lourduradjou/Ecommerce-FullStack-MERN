@@ -5,7 +5,7 @@ const APIFeatures = require('../utils/apiFeatures')
 
 //Fetching all Products details - /api/v1/products
 exports.getProducts = catchAsyncError(async (req, res, next) => {
-	const resultsPerPage = 2 //used to get the number of results we wanna show
+	const resultsPerPage = 5 //used to get the number of results we wanna show
 	//we send the data to the api features to use it functions
 	const apiFeatures = new APIFeatures(Product.find(), req.query)
 		.search()

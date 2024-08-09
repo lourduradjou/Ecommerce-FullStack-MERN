@@ -18,7 +18,7 @@ const router = express.Router()
 //routes to work with , example get and put request of the products
 
 //get all products details route -> api/v1/products
-router.route('/products').get(isAuthenticatedUser, getProducts)
+router.route('/products').get( getProducts)
 
 //get a single product details route -> api/v1/product/:id
 router
