@@ -3,16 +3,31 @@ import { useDispatch, useSelector } from 'react-redux'
 import MetaData from './MetaData'
 import { getProducts } from '../stateManagement/actions/productsActions'
 import Loader from './layout/Loader'
-import Products from './Products'
+import Products from './productComponents/Products'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const Home = () => {
 	const dispatch = useDispatch()
-	const { products, loading } = useSelector((state) => state.productsState)
+	const { products, loading, error } = useSelector(
+		(state) => state.productsState
+	)
 
 	useEffect(() => {
+		if (error) {
+			return toast.error(error, {
+				position: 'top-center',
+				autoClose: 5000,
+				hideProgressBar: true,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: 'colored',
+			})
+		}
 		dispatch(getProducts) //please don't pass getProducts like -> as a function getProducts() it won't work
-	}, [dispatch])
-
+	}, [dispatch, error])
 
 	return (
 		<Fragment>

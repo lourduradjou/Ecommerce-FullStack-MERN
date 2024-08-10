@@ -23,7 +23,7 @@ router.route('/products').get( getProducts)
 //get a single product details route -> api/v1/product/:id
 router
 	.route('/product/:id')
-	.get(isAuthenticatedUser,getSingleProduct)
+	.get(getSingleProduct)
 	.put(isAuthenticatedUser,authorizeRoles('admin'), updateProduct)
 	.delete(isAuthenticatedUser,authorizeRoles('admin'), deleteProduct) //three request for the same uri combined
 //router.route('/product/:id').put(updateProduct) - can be like this also

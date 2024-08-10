@@ -14,7 +14,7 @@ exports.getProducts = catchAsyncError(async (req, res, next) => {
 
 	const products = await apiFeatures.productDetails //get the apiFeatures query which was send back using await ..
 	await new Promise((resolve) => {
-		setTimeout(resolve, 3000) // Waits for 3000 milliseconds (3 seconds)
+		setTimeout(resolve, 2000) // Waits for 3000 milliseconds (3 seconds)
 	})
 	res.status(200).json({
 		success: true,
@@ -40,6 +40,11 @@ exports.newProduct = catchAsyncError(async (req, res, next) => {
 exports.getSingleProduct = catchAsyncError(async (req, res, next) => {
 	const product = await Product.findById(req.params.id)
 
+	// await new Promise((resolve) => {
+	// 	setTimeout(resolve, 2000) // Waits for 3000 milliseconds (3 seconds)
+	// })
+		
+	
 	if (!product) {
 		//if the product is empty
 		return next(new ErrorHandler('Product not found', 400))

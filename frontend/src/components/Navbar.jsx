@@ -7,7 +7,7 @@ const Navbar = () => {
 				<div className='flex items-center w-full'>
 					<img
 						className='w-16 rounded-md'
-						src='./images/walmartLogo.png'
+						src='/images/walmartLogo.png'
 						alt='Walmart Logo'
 					/>
 
