@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { getProduct } from '../../stateManagement/actions/productAction'
 import Loader from '../layout/Loader'
-import Ratings from '../layout/Ratings'
+// import Ratings from '../layout/Ratings'
+import Carousal from '../layout/Carousal'
 
 const Product = () => {
 	const { product, loading } = useSelector((state) => state.productState)
@@ -12,13 +13,6 @@ const Product = () => {
 	useEffect(() => {
 		dispatch(getProduct(id))
 	}, [dispatch, id])
-
-	const [rating, setRating] = useState(0)
-
-	const handleRatingChange = (newRating) => {
-		setRating(newRating)
-		console.log('New Rating:', newRating)
-	}
 
 	const renderStars = (rating) => {
 		const fullStars = Math.floor(rating)
@@ -60,16 +54,23 @@ const Product = () => {
 				product && (
 					<div className='container mx-auto px-4 py-16'>
 						<div className='flex flex-col lg:flex-row justify-between items-start space-y-8 lg:space-y-0 lg:space-x-8'>
-							<div className='lg:w-1/2 flex justify-center lg:justify-start select-none'>
-								<img
-									src={
-										product.images
-											? product.images[0].image
-											: ''
-									}
-									alt='Product'
-									className='w-full h-auto max-w-md rounded-lg shadow-lg'
-								/>
+							<div className='lg:w-1/3 lg:h-auto flex justify-center items-center select-none'>
+								{product.images ? (
+									<Carousal autoSlide='true'>
+										{product.images.map(
+											(imageObj, index) => (
+												<img
+													className='object-contain'
+													key={imageObj._id}
+													src={imageObj.image}
+													alt={product.name}
+												/>
+											)
+										)}
+									</Carousal>
+								) : (
+									<img src='' alt='Image not found' />
+								)}
 							</div>
 
 							<div className='lg:w-1/2 space-y-4'>
@@ -172,12 +173,12 @@ const Product = () => {
 												</h5>
 											</div>
 											<div className='space-y-2'>
-												<Ratings
+												{/* <Ratings
 													value={rating}
 													onChange={
 														handleRatingChange
 													}
-												/>
+												/> */}
 												<textarea
 													name='review'
 													className='form-textarea w-full border rounded p-2'

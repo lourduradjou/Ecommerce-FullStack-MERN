@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const Products = ({ products }) => {
 	const renderStars = (rating) => {
@@ -49,9 +50,12 @@ const Products = ({ products }) => {
 							/>
 							<div className='flex flex-col p-4'>
 								<h5 className='text-lg font-bold mb-2'>
-									<a href='/' className='hover:underline'>
+									<Link
+										className='hover:underline'
+										to={`/product/${product._id}`}
+									>
 										{product.name}
-									</a>
+									</Link>
 								</h5>
 								<p>{product.description}</p>
 								<div className='mt-auto flex items-center'>
@@ -59,7 +63,6 @@ const Products = ({ products }) => {
 										{renderStars(product.ratings)}
 										<span
 											className='ml-2'
-											id='no_of_reviews'
 										>
 											({product.numOfReviews} Reviews)
 										</span>
@@ -68,13 +71,13 @@ const Products = ({ products }) => {
 								<p className='text-lg font-semibold mt-2'>
 									${product.price}
 								</p>
-								<a
-									href='/'
-									id='view_btn'
-									className='btn btn-blue mt-3'
+
+								<Link
+									className='hover:underline'
+									to={`/product/${product._id}`}
 								>
 									View Details
-								</a>
+								</Link>
 							</div>
 						</div>
 					</div>

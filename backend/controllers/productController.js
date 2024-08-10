@@ -13,9 +13,9 @@ exports.getProducts = catchAsyncError(async (req, res, next) => {
 		.paginate(resultsPerPage)
 
 	const products = await apiFeatures.productDetails //get the apiFeatures query which was send back using await ..
-	await new Promise((resolve) => {
-		setTimeout(resolve, 2000) // Waits for 3000 milliseconds (3 seconds)
-	})
+	// await new Promise((resolve) => {
+	// 	setTimeout(resolve, 2000) // Waits for 3000 milliseconds (3 seconds)
+	// })
 	res.status(200).json({
 		success: true,
 		count: products.length,
