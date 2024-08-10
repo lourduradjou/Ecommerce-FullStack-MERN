@@ -3,7 +3,7 @@ node_modules/
 
 # Ignore environment configuration files
 .env
-backend/config/config.env
+./config/config.env
 
 #git rm -- cached backend/config/config.env
 #used to remove the focus of git over .env file which is pushed wrongly ...
